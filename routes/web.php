@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\CertificateController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -11,5 +12,14 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');
+    Route::get('/certificates/create', [CertificateController::class, 'create'])->name('certificates.create');
+    Route::post('/certificates', [CertificateController::class, 'store'])->name('certificates.store');
+    Route::get('/certificates/{certificate}/edit', [CertificateController::class, 'edit'])->name('certificates.edit');
+    Route::put('/certificates/{certificate}', [CertificateController::class, 'update'])->name('certificates.update');
+    Route::delete('/certificates/{certificate}', [CertificateController::class, 'destroy'])->name('certificates.destroy');
+});
+
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
