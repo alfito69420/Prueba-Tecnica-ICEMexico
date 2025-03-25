@@ -42,12 +42,10 @@ const deleteCertificate = async (id: number) => {
     router.delete(`/certificates/${id}`, {
         preserveScroll: true,
         onSuccess: () => {
-            router.visit('/certificates', { replace: true });   //  redirige a la lista actualizada
-            //toast.success('Certificate deleted successfully.');
+            router.visit('/certificates', { replace: true });
         },
         onError: (errors) => {
             console.error('Errror deleting employee: ', errors)
-            //toast.error('Failed to delete certificate.');
         },
     });
 }
