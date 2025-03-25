@@ -36,3 +36,9 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface Certificate {
+    id: number;
+    name: string;
+    description: string;
+}
