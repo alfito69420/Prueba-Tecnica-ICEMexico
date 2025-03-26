@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -9,12 +10,10 @@ import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { BookText, LibraryBig } from 'lucide-vue-next';
 
-const mainNavItems: NavItem[] = [
-    // {
-    //     title: 'Dashboard',
-    //     href: '/dashboard',
-    //     icon: LayoutGrid,
-    // },
+const { props } = usePage();
+const userRole = props.userRole;
+
+const mainUserNavItems: NavItem[] = [
     {
         title: 'Certificates',
         href: '/certificates',
@@ -23,6 +22,19 @@ const mainNavItems: NavItem[] = [
     {
         title: 'My Certificates',
         href: '/my-certificates',
+        icon: BookText,
+    },
+];
+
+const mainAdminNavItems: NavItem[] = [
+    {
+        title: 'Certificates',
+        href: '/certificates',
+        icon: LibraryBig,
+    },
+    {
+        title: 'Students',
+        href: '',
         icon: BookText,
     },
 ];
@@ -48,7 +60,7 @@ const footerNavItems: NavItem[] = [
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
                         <Link :href="route('dashboard')">
-                            <AppLogo />
+                        <AppLogo />
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -56,7 +68,8 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <!-- <NavMain :items="mainNavItems" /> -->
+            <NavMain :items="userRole === 'administrador' ? mainAdminNavItems : mainUserNavItems" />
         </SidebarContent>
 
         <SidebarFooter>

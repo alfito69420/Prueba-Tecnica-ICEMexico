@@ -13,13 +13,21 @@ class CertificateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        return Inertia::render('Certificates/Index', [
+        $user = $request->user();
+
+        if ($user->role->rol == 'administrador') {
+            // Vista para administradores
+            return Inertia::render('Certificates/admin/Index', [
+                'certificates' => Certificate::all(),
+                'userRole' => $user->role->rol,
+            ]);
+        }
+
+        return Inertia::render('Certificates/user/Index', [
             'certificates' => Certificate::all(),
-            //'certificates' => Certificate::paginate(10),
-            //'certificates' => Certificate::select('name','description')->paginate(10),
+            'userRole' => $user->role->rol,
         ]);
     }
 
@@ -28,7 +36,6 @@ class CertificateController extends Controller
      */
     public function create()
     {
-        //
         return Inertia::render('Certificates/Create');
     }
 
@@ -37,7 +44,6 @@ class CertificateController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
@@ -51,7 +57,6 @@ class CertificateController extends Controller
      */
     public function edit(Certificate $certificate)
     {
-        //
         return Inertia::render('Certificates/Edit', [
             'certificate' => $certificate,
         ]);
@@ -62,7 +67,6 @@ class CertificateController extends Controller
      */
     public function update(Request $request, Certificate $certificate)
     {
-        //
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
@@ -77,7 +81,6 @@ class CertificateController extends Controller
      */
     public function destroy(Certificate $certificate)
     {
-        //
         $certificate->delete();
         return Inertia::render('Certificates/Index', [
             'certificates' => Certificate::all(),
@@ -87,14 +90,6 @@ class CertificateController extends Controller
     public function enroll(Request $request, Certificate $certificate)
     {
         $user = $request->user();
-
-        // Verifica si el usuario ya está enrolado para evitar duplicados
-        // if (!$user->certificates()->where('certificate_id', $certificate->id)->exists()) {
-        //     $user->certificates()->attach($certificate->id, [
-        //         'enrolled_at' => now(),
-        //         'status' => 'not evaluated'
-        //     ]);
-        // }
 
         // Verifica si el usuario ya se inscribió en el certificado.
         if ($user->certificates()->where('certificate_id', $certificate->id)->exists()) {
@@ -106,23 +101,26 @@ class CertificateController extends Controller
             'enrolled_at' => now(),
             'status'      => 'not evaluated',
         ]);
-
-        //return redirect()->back()->with('success', 'Inscripción realizada correctamente.');
         
         return redirect()->back()->with('success', 'Te has inscrito exitosamente.');
     }
 
     public function myCertificates(Request $request)
     {
-        $certificates = $request->user()->certificates()
-            ->withPivot('status', 'enrolled_at') // Asegura que se incluya el campo pivot
-            ->get(); // Relación many-to-many
+        $user = $request->user();
 
-        return Inertia::render('Certificates/MyCertificates', [
+        $roleName = $user->role->rol;
+
+        //dd($roleName); // Verifica si el valor es correcto
+
+        $certificates = $request->user()->certificates()
+            ->withPivot('status', 'enrolled_at')
+            ->get();
+
+        return Inertia::render('Certificates/user/MyCertificates', [
             'certificates' => $certificates,
         ]);
     }
-
 
     public function deleteSubscription(Request $request, Certificate $certificate)
     {
