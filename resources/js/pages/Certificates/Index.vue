@@ -73,13 +73,13 @@ const enrollCertificate = (certificateId: number) => {
 
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
-            <div class="flex">
+            <!-- <div class="flex">
                 <Button as-child size="lg" class="bg-blue-500 text-white hover:bg-blue-700">
                     <Link :href="`/certificates/create`">
                     <CirclePlus /> Create
                     </Link>
                 </Button>
-            </div>
+            </div> -->
 
             <div
                 class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border md:min-h-min">

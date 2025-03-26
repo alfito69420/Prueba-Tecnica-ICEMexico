@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,10 +43,17 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $rol = Role::where('rol', 'usuario')->first();
+        if ($rol) {
+            //$user->rol()->associate($rol);
+            $user->role()->associate($rol);
+            $user->save();
+        }
+
         event(new Registered($user));
 
         Auth::login($user);
 
-        return to_route('dashboard');
+        return to_route('certificates.index');
     }
 }
