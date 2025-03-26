@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class CertificateUserController extends Controller
+class RolController extends Controller
 {
     /**
      * Display a listing of the resource.

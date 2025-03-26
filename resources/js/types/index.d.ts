@@ -37,12 +37,28 @@ export interface User {
 
 export type BreadcrumbItemType = BreadcrumbItem;
 
+// export interface Certificate {
+//     id: number;
+//     name: string;
+//     description: string;
+//     pivot?: {
+//         user_id: number;
+//         status: 'not evaluated' | 'evaluated' | 'canceled';
+//         enrolled_at: string | null;
+//     };
+// }
+
 export interface Certificate {
     id: number;
     name: string;
     description: string;
-    pivot?: {
-        status: 'not evaluated' | 'evaluated' | 'canceled';
-        enrolled_at: string | null;
-    };
+    users: {
+        id: number;
+        name: string;
+        email: string;
+        pivot: {
+            status: 'not evaluated' | 'evaluated' | 'canceled';
+            enrolled_at: string | null;
+        };
+    }[];
 }

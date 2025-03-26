@@ -27,6 +27,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/certificates/{certificate}/unsubscribe', [CertificateController::class, 'deleteSubscription'])
         ->name('certificates.unsubscribe')
         ->middleware('auth');
+
+    // Users
+    Route::get('/students', [CertificateController::class, 'show'])->name('certificates.show');
+    Route::get('/student/{certificate}/edit', [CertificateController::class, 'update'])->name('certificates.editStudentCertificate');
 });
 
 require __DIR__ . '/settings.php';

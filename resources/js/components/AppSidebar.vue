@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -7,14 +8,16 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
-import { BookText, LibraryBig } from 'lucide-vue-next';
+import { BookText, LibraryBig, User } from 'lucide-vue-next';
 
-const mainNavItems: NavItem[] = [
-    // {
-    //     title: 'Dashboard',
-    //     href: '/dashboard',
-    //     icon: LayoutGrid,
-    // },
+const { props } = usePage();
+const userRole = props.userRole;
+const { url } = usePage();  // Acceder a la URL actual
+
+console.log('User Role:', userRole);
+console.log('Current URL:', url);
+
+const mainUserNavItems: NavItem[] = [
     {
         title: 'Certificates',
         href: '/certificates',
@@ -27,16 +30,16 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-const footerNavItems: NavItem[] = [
+const mainAdminNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
+        title: 'Certificates',
+        href: '/certificates',
+        icon: LibraryBig,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
+        title: 'Students',
+        href: '/students',
+        icon: User,
     },
 ];
 </script>
@@ -47,20 +50,18 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
-                            <AppLogo />
-                        </Link>
+                        <AppLogo />
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <!-- <NavMain :items="mainNavItems" /> -->
+            <NavMain :items="userRole === 'administrador' ? mainAdminNavItems : mainUserNavItems" />
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>
