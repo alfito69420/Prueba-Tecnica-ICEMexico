@@ -101,7 +101,7 @@ class CertificateController extends Controller
             'enrolled_at' => now(),
             'status'      => 'not evaluated',
         ]);
-        
+
         return redirect()->back()->with('success', 'Te has inscrito exitosamente.');
     }
 
@@ -141,6 +141,13 @@ class CertificateController extends Controller
         return Inertia::render('Certificates/admin/student', [
             'certificates' => $certificates,
             'userRole' => $user->role->rol,
+        ]);
+    }
+
+    public function editStudentCertificate(Certificate $certificate)
+    {
+        return Inertia::render('Certificates/admin/Edit', [
+            'certificate' => $certificate,
         ]);
     }
 }

@@ -30,8 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Users
     Route::get('/students', [CertificateController::class, 'show'])->name('certificates.show');
+    Route::get('/student/{certificate}/edit', [CertificateController::class, 'update'])->name('certificates.editStudentCertificate');
 });
-
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

@@ -15,12 +15,12 @@ import {
     TableRow,
 } from '@/components/ui/table'
 
-interface CertificatesPageProps extends SharedData {
-    certificates: Certificate[];
-}
+import { defineProps } from 'vue';
 
-const { props } = usePage<CertificatesPageProps>();
-const certificates = computed(() => props.certificates);
+// Recibir las props que contienen los datos de certificados
+const props = defineProps({
+    certificates: Array as () => Array<Certificate>
+});
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,40 +32,40 @@ const breadcrumbs: BreadcrumbItem[] = [
 </script>
 
 <template>
-
-    <head title="Certificates" />
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout>
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-
             <div
                 class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border md:min-h-min">
 
                 <Table>
-                    <TableCaption>Students Enrolled in Certificates.</TableCaption>
+                    <TableCaption>Certificates List.</TableCaption>
                     <TableHeader>
+                        <!-- Header -->
                         <TableRow>
                             <TableHead>Student</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Certificate</TableHead>
-                            <TableHead>Status</TableHead>
                         </TableRow>
                     </TableHeader>
 
-                    <!-- body -->
+                    <!-- Body -->
                     <TableBody>
-                        <!-- <TableRow v-for="certificate in certificates" :key="certificate.id">
-                            <TableCell colspan="4" class="font-medium">
-                                {{ certificate.name }}
-                            </TableCell>
-                        </TableRow> -->
-
                         <!-- Recorrer los estudiantes de cada certificado -->
-                        <!-- <TableRow v-for="user in certificate.users" :key="user.id">
-                            <TableCell>{{ user.name }}</TableCell>
-                            <TableCell>{{ user.email }}</TableCell> 
-                            <TableCell>{{ certificate.name }}</TableCell> 
-                            <TableCell>{{ user.$pivot.status }}</TableCell>
-                        </TableRow> -->
+                        <TableRow v-for="certificate in certificates" :key="certificate.id">
+
+                            <TableRow v-for="user in certificate.users" :key="user.id">
+                                <!-- Mostrar datos del estudiante -->
+                                <TableCell>{{ user.name }}</TableCell>
+                                <TableCell>{{ user.email }}</TableCell>
+                                <TableCell>{{ certificate.name }}</TableCell>
+                                <TableCell>{{ user.pivot.status }}</TableCell>
+                                <Button as-child size="sm" class="bg-blue-500 text-white hover:bg-blue-700">
+                                    <Link :href="`/student/${certificate.id}/edit`">
+                                    <FilePenLine />
+                                    </Link>
+                                </Button>
+                            </TableRow>
+
+
+                        </TableRow>
                     </TableBody>
                 </Table>
             </div>
