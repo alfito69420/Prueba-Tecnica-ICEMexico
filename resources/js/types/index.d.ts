@@ -41,4 +41,8 @@ export interface Certificate {
     id: number;
     name: string;
     description: string;
+    pivot?: {
+        status: 'not evaluated' | 'evaluated' | 'canceled';
+        enrolled_at: string | null;
+    };
 }

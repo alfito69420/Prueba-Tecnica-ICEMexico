@@ -45,4 +45,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function certificates()
+    {
+        return $this->belongsToMany(Certificate::class)
+            ->withPivot('enrolled_at', 'status')
+            ->withTimestamps();
+    }
 }

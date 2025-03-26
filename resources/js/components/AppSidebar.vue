@@ -7,17 +7,22 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
-import { BookText } from 'lucide-vue-next';
+import { BookText, LibraryBig } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
+    // {
+    //     title: 'Dashboard',
+    //     href: '/dashboard',
+    //     icon: LayoutGrid,
+    // },
     {
         title: 'Certificates',
         href: '/certificates',
+        icon: LibraryBig,
+    },
+    {
+        title: 'My Certificates',
+        href: '/my-certificates',
         icon: BookText,
     },
 ];
