@@ -27,6 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/certificates/{certificate}/unsubscribe', [CertificateController::class, 'deleteSubscription'])
         ->name('certificates.unsubscribe')
         ->middleware('auth');
+
+    // Users
+    Route::get('/students', [CertificateController::class, 'show'])->name('certificates.show');
 });
 
 

@@ -128,4 +128,19 @@ class CertificateController extends Controller
         $user->certificates()->detach($certificate->id);
         return redirect()->back()->with('success', 'Inscripción eliminada correctamente.');
     }
+
+    public function show(Request $request)
+    {
+        $user = $request->user();
+        // Obtener todos los certificados junto con los usuarios inscritos y sus pivotes (status y enrolled_at)
+        $certificates = Certificate::with(['users' => function ($query) {
+            $query->select('users.id', 'users.name', 'users.email')
+                ->withPivot('status', 'enrolled_at');
+        }])->get();
+
+        return Inertia::render('Certificates/admin/student', [
+            'certificates' => $certificates,
+            'userRole' => $user->role->rol,
+        ]);
+    }
 }
