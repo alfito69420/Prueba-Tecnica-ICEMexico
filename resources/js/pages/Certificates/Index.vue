@@ -4,7 +4,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Certificate, type BreadcrumbItem, type SharedData } from '@/types';
 import { Head, Link, usePage, router } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button'
-
+import { ref, watch, computed } from 'vue';
+import { Pencil, Trash, CirclePlus, FilePenLine } from 'lucide-vue-next';
 import {
     Table,
     TableBody,
@@ -14,9 +15,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-
-import { Pencil, Trash, CirclePlus } from 'lucide-vue-next';
-import { computed } from 'vue';
 
 interface CertificatesPageProps extends SharedData {
     certificates: Certificate[];
@@ -50,14 +48,31 @@ const deleteCertificate = async (id: number) => {
     });
 }
 
-</script>
+//  metodo enroll certificate
+const enrollCertificate = (certificateId: number) => {
+    router.post(`/certificates/${certificateId}/enroll`, {}, {
+        onSuccess: () => {
+            alert('Inscripción realizada correctamente.');
+            // Opcional: notificar al usuario o actualizar el estado de la vista
+            console.log('Inscripción realizada.');
+        },
+        onError: (errors) => {
+            alert('Hubo un error al realizar la inscripción.');
+            console.error('Error al inscribir: ', errors);
+        },
+    });
+};
 
+</script>
 
 <template>
 
     <head title="Certificates" />
     <AppLayout :breadcrumbs="breadcrumbs">
+
+
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+
             <div class="flex">
                 <Button as-child size="lg" class="bg-blue-500 text-white hover:bg-blue-700">
                     <Link :href="`/certificates/create`">
@@ -65,7 +80,6 @@ const deleteCertificate = async (id: number) => {
                     </Link>
                 </Button>
             </div>
-
 
             <div
                 class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border md:min-h-min">
@@ -77,7 +91,7 @@ const deleteCertificate = async (id: number) => {
                         <TableRow>
                             <TableHead>Name</TableHead>
                             <TableHead>Description</TableHead>
-                            <TableHead class="text-center">Actions</TableHead>
+                            <TableHead class="text-center">Subscribe</TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -87,16 +101,22 @@ const deleteCertificate = async (id: number) => {
                             <TableCell class="font-medium">{{ certificate.name }}</TableCell>
                             <TableCell>{{ certificate.description ?? 'N/A' }}</TableCell>
                             <TableCell class="flex justify-center gap-2">
-                                <Button as-child size="sm" class="bg-blue-500 text-white hover:bg-blue-700">
-                                    <Link :href="`/certificates/${certificate.id}/edit`">
+                                <!--  -->
+                                <Button size="sm" class="bg-blue-700 text-white hover:bg-blue-700"
+                                    @click="enrollCertificate(certificate.id)">
                                     <Pencil />
+                                </Button>
+
+                                <!-- <Button as-child size="sm" class="bg-blue-500 text-white hover:bg-blue-700">
+                                    <Link :href="`/certificates/${certificate.id}/edit`">
+                                    <FilePenLine />
                                     </Link>
                                 </Button>
 
-                                <Button size="sm" class="bg-rose-500 text-white hover:bg-rose-700"
+                                <Button size="sm" class="bg-rose-700 text-white hover:bg-rose-700"
                                     @click="deleteCertificate(certificate.id)">
                                     <Trash />
-                                </Button>
+                                </Button> -->
                             </TableCell>
                         </TableRow>
                     </TableBody>

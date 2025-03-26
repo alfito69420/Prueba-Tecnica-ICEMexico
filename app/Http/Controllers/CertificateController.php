@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Certificate;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class CertificateController extends Controller
 {
@@ -80,5 +82,52 @@ class CertificateController extends Controller
         return Inertia::render('Certificates/Index', [
             'certificates' => Certificate::all(),
         ]);
+    }
+
+    public function enroll(Request $request, Certificate $certificate)
+    {
+        $user = $request->user();
+
+        // Verifica si el usuario ya está enrolado para evitar duplicados
+        // if (!$user->certificates()->where('certificate_id', $certificate->id)->exists()) {
+        //     $user->certificates()->attach($certificate->id, [
+        //         'enrolled_at' => now(),
+        //         'status' => 'not evaluated'
+        //     ]);
+        // }
+
+        // Verifica si el usuario ya se inscribió en el certificado.
+        if ($user->certificates()->where('certificate_id', $certificate->id)->exists()) {
+            return redirect()->back()->with('warning', 'Ya estás registrado en este certificado.');
+        }
+
+        // Si no está inscrito, procede a inscribirlo.
+        $user->certificates()->attach($certificate->id, [
+            'enrolled_at' => now(),
+            'status'      => 'not evaluated',
+        ]);
+
+        //return redirect()->back()->with('success', 'Inscripción realizada correctamente.');
+        
+        return redirect()->back()->with('success', 'Te has inscrito exitosamente.');
+    }
+
+    public function myCertificates(Request $request)
+    {
+        $certificates = $request->user()->certificates()
+            ->withPivot('status', 'enrolled_at') // Asegura que se incluya el campo pivot
+            ->get(); // Relación many-to-many
+
+        return Inertia::render('Certificates/MyCertificates', [
+            'certificates' => $certificates,
+        ]);
+    }
+
+
+    public function deleteSubscription(Request $request, Certificate $certificate)
+    {
+        $user = $request->user();
+        $user->certificates()->detach($certificate->id);
+        return redirect()->back()->with('success', 'Inscripción eliminada correctamente.');
     }
 }
